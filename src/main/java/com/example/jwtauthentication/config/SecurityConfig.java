@@ -5,6 +5,7 @@ import java.net.http.HttpHeaders;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -17,7 +18,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @EnableWebSecurity
 public class SecurityConfig {
 
-	
+	@Autowired 
+	private DaoAuthenticationProvider daoAuthenticationProvider;
 
     @Autowired
     private JwtAuthenticationEntryPoint point;
@@ -38,12 +40,14 @@ public class SecurityConfig {
 			}
 		})
                 .authorizeRequests()
-                .requestMatchers("/auth/login").permitAll()      
+                .requestMatchers("/auth/login","/auth/register")
+                .permitAll()      
                 .anyRequest()
                 .authenticated()
                 .and().exceptionHandling(ex -> ex.authenticationEntryPoint(point))
                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         http.addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class);
+      //  http.authenticationProvider(daoAuthenticationProvider);
         return http.build();
     }
 

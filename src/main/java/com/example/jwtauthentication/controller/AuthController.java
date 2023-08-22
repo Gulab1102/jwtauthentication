@@ -95,11 +95,7 @@ public class AuthController {
     public ResponseEntity<String> hello(@RequestBody User user) {
     	
     	
-        // System.out.println(temp);
-        UserDetails userDetails = userDetailsService.loadUserByUsername(user.getEmail());
-        System.out.println(userDetails.getPassword());
-        
-        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+      
     	//user.setEmail(request.getEmail());
     	user.setRole("USER");
         User temp=	userRepo.save(user);

@@ -1,5 +1,7 @@
 package com.example.jwtauthentication.config;
 
+import java.net.http.HttpHeaders;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,21 +26,23 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    	
+    	http.cors();
 
         http.csrf(csrf -> {
 			try {
-				csrf.disable().cors(cors->cors.disable());
+				csrf.disable();
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		})
-                .authorizeRequests().
-                requestMatchers("/get").authenticated().requestMatchers("/auth/login").permitAll()
+                .authorizeRequests()
+                .requestMatchers("/auth/login").permitAll()      
                 .anyRequest()
                 .authenticated()
-                .and().exceptionHandling(ex -> ex.authenticationEntryPoint(point));
-            //    .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+                .and().exceptionHandling(ex -> ex.authenticationEntryPoint(point))
+               .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         http.addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }

@@ -23,7 +23,7 @@ import com.example.jwtauthentication.model.JwtResponse;
 
 @RestController
 @RequestMapping("/auth")
-@CrossOrigin
+@CrossOrigin(origins = "*")
 public class AuthController {
 	
 	@Autowired

@@ -34,7 +34,7 @@ public class SecurityConfig {
 			}
 		})
                 .authorizeRequests().
-                requestMatchers("/test").authenticated().requestMatchers("/auth/login").permitAll()
+                requestMatchers("/get").authenticated().requestMatchers("/auth/login").permitAll()
                 .anyRequest()
                 .authenticated()
                 .and().exceptionHandling(ex -> ex.authenticationEntryPoint(point));

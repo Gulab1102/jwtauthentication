@@ -95,27 +95,41 @@ public class AuthController {
     public ResponseEntity<String> hello(@RequestBody User user) {
     	
     	
-    	System.out.println(user);
-        if(user==null)return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("No User");
-       // this.doAuthenticate(request.getEmail(), request.getPassword());
-    //	User user=new User();
-    	if(user.getEmail()==null||"".equals(user.getEmail())||user.getPassword()==null||"".equals(user.getPassword()))
-    		  return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Invalid Username Password");
-    	
-    	 UserDetails userDetails = userDetailsService.loadUserByUsername(user.getEmail());
-    	  
-    	 if(userDetails.getUsername()!=null)
-    		 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Username Alraedy There try another");
-    	 
-    	user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        // System.out.println(temp);
+        UserDetails userDetails = userDetailsService.loadUserByUsername(user.getEmail());
+        System.out.println(userDetails.getPassword());
+        
+        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
     	//user.setEmail(request.getEmail());
     	user.setRole("USER");
         User temp=	userRepo.save(user);
-        // System.out.println(temp);
 
         if(temp!=null)
         	return ResponseEntity.ok("Registered successfully !!");
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("nternal error");
+        return ResponseEntity.ok("Registered successfully not !!");
+    	
+    	
+//    	System.out.println(user);
+//        if(user==null)return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("No User");
+//       // this.doAuthenticate(request.getEmail(), request.getPassword());
+//    //	User user=new User();
+//    	if(user.getEmail()==null||"".equals(user.getEmail())||user.getPassword()==null||"".equals(user.getPassword()))
+//    		  return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Invalid Username Password");
+//    	
+//    	 UserDetails userDetails = userDetailsService.loadUserByUsername(user.getEmail());
+//    	  
+//    	 if(userDetails.getUsername()!=null)
+//    		 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Username Alraedy There try another");
+//    	 
+//    	user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+//    	//user.setEmail(request.getEmail());
+//    	user.setRole("USER");
+//        User temp=	userRepo.save(user);
+//        // System.out.println(temp);
+//
+//        if(temp!=null)
+//        	return ResponseEntity.ok("Registered successfully !!");
+//        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("nternal error");
     }
 
 }

@@ -95,7 +95,7 @@ public class AuthController {
     public ResponseEntity<String> hello(@RequestBody User user) {
     	
     	
-      
+    	user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
     	//user.setEmail(request.getEmail());
     	user.setRole("USER");
         User temp=	userRepo.save(user);

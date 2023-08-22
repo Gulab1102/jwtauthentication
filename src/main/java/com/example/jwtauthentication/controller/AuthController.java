@@ -84,6 +84,12 @@ public class AuthController {
     }
     
     
+    @GetMapping("/test")
+	public String test() {
+		//this.logger.warn("This is working message");
+		return "{\"name\":\"Gulab\"}";
+	}
+    
     
     @PostMapping("/register")
     public ResponseEntity<String> hello(@RequestBody User user) {

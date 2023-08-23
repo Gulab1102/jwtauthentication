@@ -11,9 +11,9 @@ private	String username;
 		// TODO Auto-generated constructor stub
 	}
 
-	public JwtResponse(String token, String username) {
+	public JwtResponse(String jwtToken, String username) {
 		super();
-		this.jwtToken = token;
+		this.jwtToken = jwtToken;
 		this.username = username;
 	}
 
@@ -21,8 +21,8 @@ private	String username;
 		return jwtToken;
 	}
 
-	public void setToken(String token) {
-		this.jwtToken = token;
+	public void setToken(String jwtToken) {
+		this.jwtToken = jwtToken;
 	}
 
 	public String getUsername() {

@@ -43,9 +43,9 @@ public class SecurityConfig {
                 .requestMatchers("/auth/login","/auth/register")
                 .permitAll()      
                 .anyRequest()
-                .authenticated()
-                .and().exceptionHandling(ex -> ex.authenticationEntryPoint(point))
-               .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+                .authenticated();
+              //  .and().exceptionHandling(ex -> ex.authenticationEntryPoint(point))
+              // .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         http.addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class);
       //  http.authenticationProvider(daoAuthenticationProvider);
         return http.build();

@@ -8,15 +8,15 @@ import jakarta.persistence.Id;
 @Entity
 public class User {
 	
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+//	@Id
+//	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	
 	
 	
 
 	private String fullname;
-	
+	@Id
 	private String email;
 	
 	private String address;

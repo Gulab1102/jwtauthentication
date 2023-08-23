@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.jwtauthentication.helper.JwtHelper;
 import com.example.jwtauthentication.model.JwtRequest;
 import com.example.jwtauthentication.model.JwtResponse;
+import com.example.jwtauthentication.model.MyResponse;
 import com.example.jwtauthentication.model.User;
 import com.example.jwtauthentication.repo.UserRepo;
 
@@ -58,9 +59,11 @@ public class AuthController {
         
 
         UserDetails userDetails = userDetailsService.loadUserByUsername(request.getEmail());
-        String token = this.helper.generateToken(userDetails);
+        String jwtToken = this.helper.generateToken(userDetails);
 
-        JwtResponse response = new JwtResponse(token,userDetails.getUsername());
+        JwtResponse response = new JwtResponse();
+        response.setToken(jwtToken);
+        response.setUsername(userDetails.getUsername());
         
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -84,7 +87,7 @@ public class AuthController {
     }
     
     
-    @GetMapping("/test")
+    @PostMapping("/test")
 	public String test() {
 		//this.logger.warn("This is working message");
 		return "{\"name\":\"Gulab\"}";
@@ -92,40 +95,47 @@ public class AuthController {
     
     
     @PostMapping("/register")
-    public ResponseEntity<String> hello(@RequestBody User user) {
+    public ResponseEntity<MyResponse> hello(@RequestBody User user) {
+    	MyResponse response=new MyResponse();
+    	if((user.getPassword()==null)||(user.getEmail()==null)||(user.getEmail()=="")||user.getPassword()=="") {
+			//throw new Error("Alraedy There");
+			response.setMyresponse("username or password can not be empty");
+			return new ResponseEntity<>(response,HttpStatus.OK);
+		}
+    	
+    	if(userRepo.findByEmail(user.getEmail())!=null) {
+			//throw new Error("Alraedy There");
+			response.setMyresponse("Try another username");
+			return new ResponseEntity<>(response,HttpStatus.OK);
+		}
     	
     	
     	user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
     	//user.setEmail(request.getEmail());
     	user.setRole("USER");
-        User temp=	userRepo.save(user);
+    	
+    	
+    	
+    	try {
+    		
+    		userRepo.save(user);
+    		response.setMyresponse("Registered successfully !!");
+    		return new ResponseEntity<>(response,HttpStatus.OK);
+    		
+		} catch (Exception e) {
+			
+			response.setMyresponse(e.getMessage().toString());
+			
+		    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+		    
+		    
+			// TODO: handle exception
+		}
+      
+      
+        	
+        
 
-        if(temp!=null)
-        	return ResponseEntity.ok("Registered successfully !!");
-        return ResponseEntity.ok("Registered successfully not !!");
-    	
-    	
-//    	System.out.println(user);
-//        if(user==null)return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("No User");
-//       // this.doAuthenticate(request.getEmail(), request.getPassword());
-//    //	User user=new User();
-//    	if(user.getEmail()==null||"".equals(user.getEmail())||user.getPassword()==null||"".equals(user.getPassword()))
-//    		  return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Invalid Username Password");
-//    	
-//    	 UserDetails userDetails = userDetailsService.loadUserByUsername(user.getEmail());
-//    	  
-//    	 if(userDetails.getUsername()!=null)
-//    		 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Username Alraedy There try another");
-//    	 
-//    	user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-//    	//user.setEmail(request.getEmail());
-//    	user.setRole("USER");
-//        User temp=	userRepo.save(user);
-//        // System.out.println(temp);
-//
-//        if(temp!=null)
-//        	return ResponseEntity.ok("Registered successfully !!");
-//        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("nternal error");
     }
 
 }
